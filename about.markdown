@@ -4,7 +4,7 @@ title: About me
 permalink: /about/
 ---
 
-<img src="../assets/imgs/johann.JPG" alt="image of Johann Gerberding" style='display: block; margin-left: auto; margin-right: auto; width:40%;'/> 
+<img src="../assets/imgs/johann.jpg" alt="image of Johann Gerberding" style='display: block; margin-left: auto; margin-right: auto; width:40%;'/> 
 
 Hello everybody, my name is Johann, I am an industrial engineer and research scientist from Germany interested in the broad field of Machine Learning. My research focuses mainly on the transfer of state-of-the-art deep learning algorithms into business applications. Currently I am predominantly working in the field of Computer Vision but I look forward to diving deeper into Natural Language Processing and Reinforcement Learning in the future.
 
