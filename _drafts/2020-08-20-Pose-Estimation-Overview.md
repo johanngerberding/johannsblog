@@ -14,7 +14,7 @@ author: Johann Gerberding
 - nowadays all Pose Estimation Models consist of a DL part (ConvNet)
 - first convolutional neural net was applied in 2014 (Jain et al.)
 - before ConvNets the best approaches for this task were based on body part detectors (multiple stages of processing)
-- 
+
 
 What is Pose Estimation?
 What is the state of the art in the field of pose estimation
