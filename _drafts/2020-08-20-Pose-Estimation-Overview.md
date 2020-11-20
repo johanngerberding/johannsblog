@@ -68,12 +68,13 @@ What are the most popular datasets in this domain
 
 - Frames Labeled in Cinema (FLIC) (https://bensapp.github.io/flic-dataset.html)
 - MPII Human Pose Models (http://pose.mpi-inf.mpg.de/)
-- COCO
+- COCO Keypoints
 - Leeds Sports Pose Dataset (https://sam.johnson.io/research/lsp.html)
+- COCO DensePose
 
 ## Important Architectures
 
-Description of a few popular architectures in pose estimation
+In the following I will describe a few popular architectures in Single- and Multi-Human Pose Estimation but there are much more out there. Here you can find a great overview of the history of Human Pose Estimation.
 
 ### Learning Human Pose Estimation Features with Convolutional Networks (2014)
 
@@ -91,7 +92,17 @@ Description of a few popular architectures in pose estimation
 
 ### Convolutional Pose Machines (2016)
 
+- single person pose estimation
+- incorporates convolutional network into pose machine framework from Ramakrishna et al. () and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design
+- this results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data
+- image down below shows the overall architecture of the model
+- it consists of a sequence of convolutional neural networks (called stages) which produce 2D belief maps (or heatmaps) for each part
 
+![model architecture of Convolutional Pose Machines](../assets/imgs/conv_pose_machines_architecture.png)
+
+
+
+![joint detections produced by Convolutional Pose Machine model on different stages](../assets/imgs/conv_pose_machines_joint_detections_on_stages.png)
 
 
 ### Deep High-Resolution Representation Learning for Human Pose Estimation (2019)
@@ -104,3 +115,4 @@ Description of a few popular architectures in pose estimation
 
 - cool github with pose estimation papers: https://github.com/cbsudux/awesome-human-pose-estimation
 
+- Convolutional Pose Machines (https://arxiv.org/pdf/1602.00134.pdf)
