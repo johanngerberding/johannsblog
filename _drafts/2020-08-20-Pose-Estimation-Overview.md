@@ -8,19 +8,17 @@ author: Johann Gerberding
 
 # (Human) Pose Estimation
 
-- most of the time Human Pose Estimation
-- many benchmarks are based on images of humans, maybe because of applications where it can be used
+When people in the Machine Learning Community talk about Pose Estimation, one can usually assume that they are talking about Human Pose Estimation. All of the known benchmarks in the field of Pose Estimation are based on images of people. Maybe this is due to the many potential applications of such models, e.g. Action Recognition, ... This is a difficult problem due to possible strong articulations, small and barely visible joints or keypoints, occlusions, and a high variance in clothing and lighting.
+
+But first of all, what exactly is Human Pose Estimation?
+
+Basically you can differentiate between 2D and 3D pose estimation. In **2D Pose Estimation** a 2D pose of (x,y) coordinates for each joint from a RGB image are estimated. In **3D Pose Estimation** you also incorporate the prediction of a third coordinate z.
+
+
 - in this article I will only talk about Deep Learning based Pose Estimation models
 - nowadays all Pose Estimation Models consist of a DL part (ConvNet)
 - first convolutional neural net was applied in 2014 (Jain et al.)
 - before ConvNets the best approaches for this task were based on body part detectors (multiple stages of processing)
-
-
-What is Pose Estimation?
-What is the state of the art in the field of pose estimation
-
-- 2D Pose Estimation -> estimate a 2D pose (x,y) coordinates for each joint from a RGB image
-- 3D Pose Estimation -> estimate a 3D pose (x,y,z) coordinates 
 
 
 ## Top-down vs. Bottom-up Approaches
@@ -36,10 +34,6 @@ In the follow I will describe the most common evaluation metrics in Human Pose E
 
 A limb is considered detected  (a correct part) if the distance between the two predicted joint locations and the true limb joint locations is less than half of the limb length (Commonly denoted as PCP@0.5). The smaller the PCP value, the better the performance of the model. The drawback of this metric is that it penalizes shorter limbs because shorter limbs like lower arms which are usually harder to detect.
 
-### Percentage of Correct Keypoints (PCK)
-
-
-
 ### Percentage of Detected Joints (PDJ)
 
 PDJ measures the detection rate of joints where a joint is considered as detected if the distance between the predicted joint and the ground-truth joint is less than a fraction of a **base element**.
@@ -49,6 +43,14 @@ The base element from the original implementation is the **torso diameter** whic
 $$PDJ = \frac{\sum_{i=1}^{n} bool(d_{i} < threshold * diagonal_{bbox})}{n}$$
 
 where $d_{i}$ represents the euclidean distance between the ground truth keypoint and the predicted keypoint. The $bool()$ function returns 1 if the distance is smaller than the diagonal times the threshold (e.g. 0.05) and 0 if its not. The integer $n$ describes the number of keypoints.
+
+
+### Percentage of Correct Keypoints (PCK)
+
+(original paper: Multimodal decomposable models for human pose estimation 2013)
+
+Can be the same as PDJ where the torso diameter is used as base element for the threshold calculation. The threshold can also be 50% of the head bone link, which is denoted as PCKh@0.5. This alleviates the problem with shorter limbs.
+
 
 ### Object Keypoint Similarity (OKS) based mAP
 
@@ -85,6 +87,16 @@ Description of a few popular architectures in pose estimation
 - convnet produces a *response map* indicating the confidence of the body part at that location
 
 - before feeding the image into the network, local contrast normalization is performed
+
+
+### Convolutional Pose Machines (2016)
+
+
+
+
+### Deep High-Resolution Representation Learning for Human Pose Estimation (2019)
+
+
 
 ## References
 
