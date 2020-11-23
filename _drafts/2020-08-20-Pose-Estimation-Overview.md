@@ -12,19 +12,14 @@ When people in the Machine Learning Community talk about Pose Estimation, one ca
 
 But first of all, what exactly is Human Pose Estimation?
 
-Basically you can differentiate between 2D and 3D pose estimation. In **2D Pose Estimation** a 2D pose of (x,y) coordinates for each joint from a RGB image are estimated. In **3D Pose Estimation** you also incorporate the prediction of a third coordinate z.
-
-
-- in this article I will only talk about Deep Learning based Pose Estimation models
-- nowadays all Pose Estimation Models consist of a DL part (ConvNet)
-- first convolutional neural net was applied in 2014 (Jain et al.)
-- before ConvNets the best approaches for this task were based on body part detectors (multiple stages of processing)
+Basically you can differentiate between 2D and 3D pose estimation. In **2D Pose Estimation** a 2D pose of (x,y) coordinates for each joint from a RGB image are estimated. In **3D Pose Estimation** you also incorporate the prediction of a third coordinate z. In this article I will only talk about Deep Learning based Pose Estimation models because nowadays nearly all Pose Estimation Models consist of a Deep Learning part (Convolutional Neural Network). The first ConvNet was applied in 2014 [3] by Jain et al. Before this the best approaches for this task were based on body part detectors (multiple stages of processing).
 
 
 ## Top-down vs. Bottom-up Approaches
 
-Description of the two different approaches
-How does pose estimation work?
+There are two different approaches on how to tackle the problem of Pose Estimation: Top-down and Bottom-up.
+
+**Top-down:** This is a two stage approach where you combine a detection model with a pose estimation model. The detection model first predicts bounding boxes of the people in an image which you feed the pose estimation model which predicts the keypoints for the person. This approach depends on the performance of the upstream detection model 
 
 ## Evaluation
 
@@ -49,7 +44,7 @@ where $d_{i}$ represents the euclidean distance between the ground truth keypoin
 
 (original paper: Multimodal decomposable models for human pose estimation 2013)
 
-Can be the same as PDJ where the torso diameter is used as base element for the threshold calculation. The threshold can also be 50% of the head bone link, which is denoted as PCKh@0.5. This alleviates the problem with shorter limbs.
+Can be the same as PDJ where the torso diameter is used as base element for the threshold calculation. The threshold can also be 50% of the head bone link, which is denoted as PCKh@0.5 [2]. This alleviates the problem with shorter limbs.
 
 
 ### Object Keypoint Similarity (OKS) based mAP
@@ -68,9 +63,8 @@ What are the most popular datasets in this domain
 
 - Frames Labeled in Cinema (FLIC) (https://bensapp.github.io/flic-dataset.html)
 - MPII Human Pose Models (http://pose.mpi-inf.mpg.de/)
-- COCO Keypoints
-- Leeds Sports Pose Dataset (https://sam.johnson.io/research/lsp.html)
-- COCO DensePose
+- COCO Keypoints/DensePose (https://cocodataset.org/#home)
+- Leeds Sports Pose Dataset (https://sam.johnson.io/research/lsp.html) 
 
 ## Important Architectures
 
@@ -93,7 +87,7 @@ In the following I will describe a few popular architectures in Single- and Mult
 ### Convolutional Pose Machines (2016)
 
 - single person pose estimation
-- incorporates convolutional network into pose machine framework from Ramakrishna et al. () and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design
+- incorporates convolutional network into pose machine framework from Ramakrishna et al. [1] and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design
 - this results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data
 - image down below shows the overall architecture of the model
 - it consists of a sequence of convolutional neural networks (called stages) which produce 2D belief maps (or heatmaps) for each part
@@ -105,9 +99,35 @@ In the following I will describe a few popular architectures in Single- and Mult
 ![joint detections produced by Convolutional Pose Machine model on different stages](../assets/imgs/conv_pose_machines_joint_detections_on_stages.png)
 
 
+### DeeperCut: A Deeper, Stronger, and Faster Multi-Person Pose Estimation Model (2016)
+
+depp
+
+### Stacked Hourglass Networks for Human Pose Estimation (2016)
+
+hihi
+
+
+
+### Multi-context Attention for Human Pose Estimation (2017)
+
+attetntion
+
+
+
+### Learning Feature Pyramids for Human Pose Estimation (2017)
+
+feature pyramids
+
+
+### RMPE: Regional Multi-person Pose Estimation (2017)
+
+realtime
+
+
 ### Deep High-Resolution Representation Learning for Human Pose Estimation (2019)
 
-
+jallo
 
 ## References
 
@@ -115,4 +135,8 @@ In the following I will describe a few popular architectures in Single- and Mult
 
 - cool github with pose estimation papers: https://github.com/cbsudux/awesome-human-pose-estimation
 
-- Convolutional Pose Machines (https://arxiv.org/pdf/1602.00134.pdf)
+- [1] Convolutional Pose Machines (https://arxiv.org/pdf/1602.00134.pdf)
+
+- [2] 2D Human Pose Estimation: New Benchmark and State of the Art Analysis (http://human-pose.mpi-inf.mpg.de/contents/andriluka14cvpr.pdf)
+
+- [3] Learning Human Pose Estimation Features with Convolutional Networks (https://arxiv.org/pdf/1312.7302.pdf)
