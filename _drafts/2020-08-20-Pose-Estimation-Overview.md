@@ -19,7 +19,9 @@ Basically you can differentiate between 2D and 3D pose estimation. In **2D Pose 
 
 There are two different approaches on how to tackle the problem of Pose Estimation: Top-down and Bottom-up.
 
-**Top-down:** This is a two stage approach where you combine a detection model with a pose estimation model. The detection model first predicts bounding boxes of the people in an image which you feed the pose estimation model which predicts the keypoints for the person. This approach depends on the performance of the upstream detection model 
+**Top-down:** This is a two stage approach where you combine a detection model with a pose estimation model. The detection model first predicts bounding boxes of the people in an image which you feed the pose estimation model which predicts the keypoints for the person. This approach depends on the performance of the upstream detection model and can be computationally expensive.
+
+**Bottom-up:** 
 
 ## Evaluation
 
@@ -72,31 +74,24 @@ In the following I will describe a few popular architectures in Single- and Mult
 
 ### Learning Human Pose Estimation Features with Convolutional Networks (2014)
 
-- first deep learning approach to tackle the problem of human pose estimation (conv nets)
-- architecture:
+This paper describes the first deep learning approach to tackle the problem of single-person full body human pose estimation with convolutional neural networks. In this approach the authors trained multiple independent binary classification networks, one network per keypoint. The model is applied in a sliding window approach and outputs a *response map* indicating the confidence of the body part at that location. The figure below shows the architecture of the classification models.
 
 ![model architecture of Jain et al. 2014](../assets/imgs/model_architecture_jain_et_al_2014.png)
 
-- they used multiple convnets to perform independent binary body-part classification
-- sliding window approach, output 1 or 0 if body part is in this region
-- convnet produces a *response map* indicating the confidence of the body part at that location
-
-- before feeding the image into the network, local contrast normalization is performed
+The input is of shape 64x64 pixel and locally contrast normalized (LCN). As activation functions ReLU is used. To reduce computational complexity max pooling is applied twice which leeds to some spatial information loss. After the three convoliutional layers follow three fully connected layers. To reduce overfitting, L2 regularization and dropout are applied in the fully connected layers. The output layer is a single logistic unit, representing the probability of a body part being in the patch. Moreover the authors use part priors for the final prediction. For a detailed breakdown of how all this works you should have a look at the paper.
 
 
 ### Convolutional Pose Machines (2016)
 
-- single person pose estimation
-- incorporates convolutional network into pose machine framework from Ramakrishna et al. [1] and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design
-- this results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data
-- image down below shows the overall architecture of the model
-- it consists of a sequence of convolutional neural networks (called stages) which produce 2D belief maps (or heatmaps) for each part
+A Convolutional Pose Machine is a single-person Human Pose Estimation model which incorporates convolutional networks into the pose machine framework from Ramakrishna et al. () and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design. This results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data. The figure down below shows the overall architecture of the model.
 
 ![model architecture of Convolutional Pose Machines](../assets/imgs/conv_pose_machines_architecture.png)
 
-
+It consists of a sequence of stages (ConvNets) which produce 2D belief maps (heatmaps) for each part/keypoint. Before the images are fed into the network they are scaled down to a size of 368x368 pixels. The first stage consists of seven convolutional and three pooling layers with different kernel sizes. The second and all following stages are different from the first one. Here you feed in the input image again and cocatenate it after several convolutions and pooling operations with the output belief maps of the previous stage. After that you feed the concatenated maps into five more convolutional layers. Every stage outputs P+1 belief maps of 46x46 pixels where P is the number of parts and the additional belief map is for the background. At every stage of the model a loss (MSE) is computed based on these belief maps and divided by the number of pixel values (46x46x15). In the end, these individual losses are added together to form an overall loss. At every stage the prediction quality is refined as you can see in the figure down below.
 
 ![joint detections produced by Convolutional Pose Machine model on different stages](../assets/imgs/conv_pose_machines_joint_detections_on_stages.png)
+
+In the first and second stage the model isn't sure which of the two wrists is the right one but in the third stage it seems to be certain. The same goes for the elbows.
 
 
 ### DeeperCut: A Deeper, Stronger, and Faster Multi-Person Pose Estimation Model (2016)
