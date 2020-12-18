@@ -6,6 +6,9 @@ permalink: /:title
 author: Johann Gerberding
 ---
 
+1. The generated Toc will be an ordered list
+{:toc}
+
 ## Introduction
 
 When people in the Machine Learning community talk about Pose Estimation, one can usually assume that they are talking about Human Pose Estimation (HPE). All of the known benchmarks or datasets in the field of pose estimation are based on images of people. Maybe this is due to the many potential applications of such models, e.g. Action/Activity Recognition, movies and animation, Human Computer Interaction, medical assistance, sports motion, self-driving [5]. HPE is a very difficult and challenging problem due to possible strong articulations, small and barely visible joints or keypoints, occlusions, self-similar parts, and a high variance in clothing and lighting. But first of all, what exactly is HPE?
