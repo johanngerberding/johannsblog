@@ -12,7 +12,7 @@ When people in the Machine Learning community talk about Pose Estimation, one ca
 
 Basically you can differentiate between 2D and 3D pose estimation. In **2D Pose Estimation** a 2D pose of (x,y) coordinates for each joint from a RGB image are estimated. In **3D Pose Estimation** you also incorporate the prediction of a third coordinate z. In this article I will only talk about Deep Learning-based HPE models because nowadays nearly all of these models consist of a Deep Learning part (in most cases Convolutional Neural Networks (CNN)). The first CNN was applied in 2013 by Jain et al. . Before this the best approaches for this task were based on body part detectors (multiple stages of processing). In this blogpost we are going to look closer at the field of deep learning-based 2D HPE (green area in Figure 1) where the basis are exclusively 2D images or videos.
 
-![Categorization of HPE methods]({{ '/assets/imgs/human_pose_estimation/hpe_cat.png' | relative_url}} ) Figure 1. Categorization of HPE methods
+![Categorization of HPE methods]({{ '/assets/imgs/human_pose_estimation/hpe_cat.png' | relative_url}} ) -> Figure 1. Categorization of HPE methods <-
 
 Until today a lot has been done in the field of HPE. A wide range of approaches have been researched to make progress in this challenging area. The goal of this blogpost is to give you an overview of the field of HPE, different datasets, evaluation metrics and popular architectures. First of all, there are so many papers and models out there that I cover only a few of them but I try to incorporate the most “popular” ones. For a more scientific view on this I encourage you to check out this recent review here . Since I am a pretty normal human being and far from perfect, there can be mistakes in this blogpost, so if you find one I encourage you to send me an email and then I’ll fix it. Nevertheless, I hope that you like the post and that it is useful for you or exactly what you were looking for.
 
@@ -83,7 +83,7 @@ The Object Keypoint Similarity evaluation metric (OKS) is used for the Keypoint 
 
 The OKS is defined as followed:
 
-\[OKS = \frac{\sum_{i} exp(-d_{i}^{2} / 2s^{2}k_{i}^{2}) \delta (v_{i} > 0)}{\sum_{i} \delta (v_{i} > 0)}\]
+$$OKS = \frac{\sum_{i} exp(-d_{i}^{2} / 2s^{2}k_{i}^{2}) \delta (v_{i} > 0)}{\sum_{i} \delta (v_{i} > 0)}$$
 
 Here \(d_{i}\) also describes the euclidean distance between the ground truth keypoint and the detection and \(k_{i}\) is a per-keypoint constant that controls falloff.
 
@@ -108,13 +108,13 @@ The input is of shape 64x64 pixel and locally contrast normalized (LCN). As acti
 
 ### Convolutional Pose Machines (2016)
 
-A Convolutional Pose Machine is a single-person Human Pose Estimation model which incorporates convolutional networks into the pose machine framework from Ramakrishna et al. () and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design. This results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data. Figure [fig:cpm1] shows the overall architecture of the model.
+A Convolutional Pose Machine is a single-person Human Pose Estimation model which incorporates convolutional networks into the pose machine framework from Ramakrishna et al. () and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design. This results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data. Figure 7 shows the overall architecture of the model.
 
-![image](../assets/imgs/human_pose_estimation/conv_pose_machines_architecture.png) [fig:cpm1]
+![The model architecture of Convolutional Pose Machines]({{ '/assets/imgs/human_pose_estimation/conv_pose_machines_architecture.png' | relative_url}} ) Figure 7. The model architecture of []
 
-It consists of a sequence of stages (ConvNets) which produce 2D belief maps (heatmaps) for each part/keypoint. Before the images are fed into the network they are scaled down to a size of 368x368 pixels. The first stage consists of seven convolutional and three pooling layers with different kernel sizes. The second and all following stages are different from the first one. Here you use the first layers (share weights) of stage one to produce a belief map which is then concatenatet to the output map of the previous stage. After that you feed the concatenated maps into five more convolutional layers. Every stage outputs P+1 belief maps of 46x46 pixels where P is the number of parts and the additional belief map is for the background. At every stage of the model a loss (MSE) is computed based on these belief maps and divided by the number of pixel values (46x46x15). This also addresses the problem of vanishing gradients. In the end, these individual losses are added together to form an overall loss. At every stage the prediction quality is refined as you can see in Figure [fig:cpm2].
+It consists of a sequence of stages (ConvNets) which produce 2D belief maps (heatmaps) for each part/keypoint. Before the images are fed into the network they are scaled down to a size of 368x368 pixels. The first stage consists of seven convolutional and three pooling layers with different kernel sizes. The second and all following stages are different from the first one. Here you use the first layers (share weights) of stage one to produce a belief map which is then concatenatet to the output map of the previous stage. After that you feed the concatenated maps into five more convolutional layers. Every stage outputs P+1 belief maps of 46x46 pixels where P is the number of parts and the additional belief map is for the background. At every stage of the model a loss (MSE) is computed based on these belief maps and divided by the number of pixel values (46x46x15). This also addresses the problem of vanishing gradients. In the end, these individual losses are added together to form an overall loss. At every stage the prediction quality is refined as you can see in Figure 8.
 
-![image](../assets/imgs/human_pose_estimation/conv_pose_machines_joint_detections_on_stages.png) [fig:cpm2]
+![Convolutional Pose Machines joint detections]({{ '/assets/imgs/human_pose_estimation/conv_pose_machines_joint_detections_on_stages.png' | relative_url}} ) -> Figure 8. CPM joint detections [] <-
 
 In the first and second stage the model isn’t sure which of the two wrists is the right one but in the third stage it seems to be certain. The same goes for the elbows. The model is evaluated on the MPII, FLIC and the Leeds Sports Pose datasets (for detailed information on the performance on all of these, take a look at the original paper). Figure [fig:cpm3] shows the results on MPII in comparison to other state-of-the-art models at that time. The evaluation is based on PCKh metric.
 
