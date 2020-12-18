@@ -392,7 +392,7 @@ As mentioned in the beginning of the section there exist so many different appro
 
 -   MSPN (2019) [20]
 
-You can find all the papers in the References. Maybe I will update this post in the future including more up to date models as well.
+You can find all the papers in the References. Maybe I will update this post in the future including more up to date models as well. Moreover you can find this post as pdf file in the assets folder.
 
 
 ## References
