@@ -5,3 +5,5 @@ _site
 .DS_Store
 .dist
 vendor
+_latex
+_drafts
