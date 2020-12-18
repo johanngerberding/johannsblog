@@ -6,17 +6,17 @@ permalink: /:title
 author: Johann Gerberding
 ---
 
-# Introduction
+## Introduction
 
 When people in the Machine Learning community talk about Pose Estimation, one can usually assume that they are talking about Human Pose Estimation (HPE). All of the known benchmarks or datasets in the field of pose estimation are based on images of people. Maybe this is due to the many potential applications of such models, e.g. Action/Activity Recognition, movies and animation, Human Computer Interaction, medical assistance, sports motion, self-driving . HPE is a very difficult and challenging problem due to possible strong articulations, small and barely visible joints or keypoints, occlusions, self-similar parts, and a high variance in clothing and lighting. But first of all, what exactly is HPE?
 
 Basically you can differentiate between 2D and 3D pose estimation. In **2D Pose Estimation** a 2D pose of (x,y) coordinates for each joint from a RGB image are estimated. In **3D Pose Estimation** you also incorporate the prediction of a third coordinate z. In this article I will only talk about Deep Learning-based HPE models because nowadays nearly all of these models consist of a Deep Learning part (in most cases Convolutional Neural Networks (CNN)). The first CNN was applied in 2013 by Jain et al. . Before this the best approaches for this task were based on body part detectors (multiple stages of processing). In this blogpost we are going to look closer at the field of deep learning-based 2D HPE (green area in Figure 1) where the basis are exclusively 2D images or videos.
 
-![Categorization of HPE methods]({{ '/assets/imgs/human_pose_estimation/hpe_cat.png' | relative_url}} ) {: style="width: 100%; max-width: 100%;"} Figure 1. Categorization of HPE methods
+![Categorization of HPE methods]({{ '/assets/imgs/human_pose_estimation/hpe_cat.png' | relative_url}} ) Figure 1. Categorization of HPE methods
 
 Until today a lot has been done in the field of HPE. A wide range of approaches have been researched to make progress in this challenging area. The goal of this blogpost is to give you an overview of the field of HPE, different datasets, evaluation metrics and popular architectures. First of all, there are so many papers and models out there that I cover only a few of them but I try to incorporate the most “popular” ones. For a more scientific view on this I encourage you to check out this recent review here . Since I am a pretty normal human being and far from perfect, there can be mistakes in this blogpost, so if you find one I encourage you to send me an email and then I’ll fix it. Nevertheless, I hope that you like the post and that it is useful for you or exactly what you were looking for.
 
-# Approaches
+## Approaches
 
 There are many more possibilities on how to categorize this broad field (e.g. generative vs. discriminative, regression-based vs. detection-based, one-stage vs. multi-stage). In this blogpost I will focus on multi-person HPE because this automatically implies the single-person pose estimation domain (what I mean by this will be clear in a minute). I differentiate between *Top-down* and *Bottom-up* approaches.
 
@@ -24,60 +24,60 @@ There are many more possibilities on how to categorize this broad field (e.g. ge
 
 **Bottom-up:** The typical bottom-up HPE framework includes two stages, keypoint detection and grouping. Approaches which work this way and which are part of this blogpost are DeeperCut, OpenPose and Associative Embedding. The challenge with these models lies primarily in the correct grouping or assignment of the keypoints to the corresponding person especially in the case of unnatural poses, distortions or heavy occlusions. Important strengths of these approaches, as opposed to top-down approaches, are scalability and runtime because they don’t rely on the person detector.
 
-# Datasets
+## Datasets
 
 Datasets are essential for fair comparison of different algorithms and bring more challenges and complexity through their expansion and improvement in recent years. In this section we present you the most important and popular datasets in the domain of 2D HPE. For a very nice and short overview take a look at Table 7 in .
 
-## Frames Labeled in Cinema (FLIC)
+### Frames Labeled in Cinema (FLIC)
 
 The FLIC dataset contains 5,003 images collected from popular Hollywood movies. For every tenth frame of 30 movies, a person detector was run to obtain about 20,000 person candidates. The groundtruth labels (10 upper body joints) were obtained through the Amazon Mechanical Turk crowdsourcing marketplace (median-of-five labeling). Those labeled images were checked and rejected manually by the authors if the person was occluded or severly non-frontal. The *FLIC-full* dataset is the full set of frames including occluded, non-frontal and plain mislabeled frames. Because many of the training set images contain samples from the test set (1,016 images) scenes which allows unfair overtraining on the FLIC test set Tompson et al. proposed a new dataset called *FLIC-plus* which is a 17380 images subset from the *FLIC-full* dataset without these problems.
 
-## Leeds Sport Pose
+### Leeds Sport Pose
 
-The Leeds Sport Pose dataset (LSP) contains 2,000 images of full-body poses collected from Flickr by downloading with 8 sports tags: athletics, badminton, baseball, gymnastics, parkour, soccer, tennis and volleyball. The annotations include up to 14 different visible joints. Figure [fig:lsp] shows a few examples from the original dataset.
+The Leeds Sport Pose dataset (LSP) contains 2,000 images of full-body poses collected from Flickr by downloading with 8 sports tags: athletics, badminton, baseball, gymnastics, parkour, soccer, tennis and volleyball. The annotations include up to 14 different visible joints. Figure 2 shows a few examples from the original dataset.
 
-![image](../assets/imgs/human_pose_estimation/lsp_examples.png) [fig:lsp]
+![Some examples from the original LSP dataset]({{ '/assets/imgs/human_pose_estimation/lsp_examples.png' | relative_url}} ) Figure 2. Some examples from the original LSP dataset []
 
 A year later Johnson et al. published the extended version of this dataset containing 10,000 images collected from Flickr searches with the 3 most challenging tags: parkour, gymnastics and athletics. As for FLIC the annotations were generated by the Amazon Mechanical Turk service. The problem with this dataset is that the authors cannot guarantee for the quality of the labels.
 
-## MPII Human Pose Dataset
+### MPII Human Pose Dataset
 
-The Human Pose dataset from the Max Planck Institute for Informatics (MPII) is one of the state-of-the-art benchmarks for HPE with rich annotations. The dataset includes around 25,000 images with more than 40,000 people with 16 annotated joints. Furthermore the dataset covers 410 human activities which is also part of the image annotations. The images were extracted from YoutTube videos. Figure [fig:mpii] shows some random images from the dataset and the associated activites.
+The Human Pose dataset from the Max Planck Institute for Informatics (MPII) is one of the state-of-the-art benchmarks for HPE with rich annotations. The dataset includes around 25,000 images with more than 40,000 people with 16 annotated joints. Furthermore the dataset covers 410 human activities which is also part of the image annotations. The images were extracted from YoutTube videos. Figure 3 shows some random images from the dataset and the associated activites.
 
-![image](../assets/imgs/human_pose_estimation/mpii_examples.png) [fig:mpii]
+![Some examples from the original MPII dataset]({{ '/assets/imgs/human_pose_estimation/mpii_examples.png' | relative_url}} ) Figure 3. Some examples from the original MPII dataset []
 
 Images in MPII have various body poses and are suitable for many tasks such as 2D single- and multiple HPE, action recognition, etc.
 
-## COCO Keypoints
+### COCO Keypoints
 
 The Microsoft Common Objects in Context (COCO) dataset is a large-scale dataset that was originally proposed for object detection and segmentation in natural environments. Over time the dataset was improved and extended e.g. with image captions and keypoint labels. The images were collected from Google, Bing and Flickr image search with isolated as well as pairwise object categories. The annotations were also conducted on Amazon Mechanical Turk.
 
-![image](../assets/imgs/human_pose_estimation/coco_keypoint_examples_2020.png) [fig:coco]
+![Some examples from the COCO 2020 keypoint detection task]({{ '/assets/imgs/human_pose_estimation/coco_keypoint_examples_2020.png' | relative_url}} ) Figure 4. Some examples from the COCO 2020 keypoint detection task []
 
 The whole dataset contains more than 200,000 images and 250,000 labeled person instances. Annotations on train and validation sets with over 150,000 people and 1.7 million labeled keypoints are publicly available. The annotations for each person include 17 body joints with visibility and left/right labels, and instance human body segmentation. Moreover the COCO dataset contains about 120,000 unlabeled images following the same class distribution as the labeled images which can be used for unsupervised or semi-supervised learning.
 
-## AIC-HKD Dataset
+### AIC-HKD Dataset
 
 The AI Challenger Human Keypoint Dataset (AIC-HKD) is a subset of the large-scale dataset called AI Challenger. It is the biggest benchmark dataset out there containing 210,000 images for training, 30,000 for validation and 60,000 for testing. For the 210 000 images in training set, there are 378,374 human figures with almost 5 million keypoints. Among all the human keypoints 78.4% of them are labeled as visible(v = 1) and the rest of them are labeled as not visible(v = 2). All of these images were collected from Internet search engines. Inappropriate images (e.g. politicians, sexual contents) were removed manually. In addition, images with too many human figures (e.g. crowds in a soccer stadium) and those with very small human figures were excluded. The skeleton consists of 14 different human skeletal keypoints with one of three possible visibility flags: labeled and visible, labeled but not visible or not labeled.
 In addition to the presented 2D image datasets there exist video-based datasets for the same purpose e.g. the Penn Action Dataset , the Joint-annotated Human Motion Database (J-HMDB) , PoseTrack . You can also check them out if you are interested in this.
 
-# Evaluation
+## Evaluation
 
 Because of the fact that different datasets have different features, e.g. various range of human body sizes, full or only upper human body, in combination with different task requirements (single- or multi-person) there exist several evaluation metrics for 2D HPE. In the following I will describe the most common evaluation metrics in HPE which are regularly used to compare different approaches
 
-## Percentage of Correct Parts
+### Percentage of Correct Parts
 
 Percentage of Correct Parts (PCP) is widely used in early research as evaluation metric. A limb is considered detected if the distance between the two predicted joint locations and the true limb joint locations is less than 50% of the limb length (commonly denoted as PCP@0.5). The smaller the PCP value, the better the performance of the model. The drawback of this metric is that it penalizes shorter limbs because shorter limbs like lower arms which are usually harder to detect. Moreover there exist a few slightly modified versions of this metric.
 
-## Percentage of Correct Keypoints
+### Percentage of Correct Keypoints
 
 The Percentage of Correct Keypoints (PCK) measures the accuracy of the localization of body joints where a candidate joint is considered as correct if it is within a certain distance or threshold of the groundtruth joint. The threshold can e.g. be a fraction of the person bounding box or 50% of the head bone link, which is denoted as PCKh@0.5 . This alleviates the problem with shorter limbs mentioned before and is e.g. the standard evaluation metric for MPII evaluation. Another possibility is to use a pixel radius normalized by the torso height of each test sample as threshold value , which is also denoted as Percentage of Detected Joints (PDJ) by .
 
-## Average Precision & Recall
+### Average Precision & Recall
 
 Imagine you have a dataset with groundtruth labels for different keypoints but without the bounding boxes. How do you evaluate your approach on such a dataset? You can use Average Presicion (AP) similar to object detection. If a predicted joint falls within a threshold of the groundtruth joint location, it is counted as true positive. For MPPE evaluation, all predicted poses are assigned to the groundtruth poses one by one based on the PCKh score order while unassigned predictions are counted as false positives. The mean AP (mAP) is reported from the AP of each body joint. For the COCO dataset AP, AR and their variants are reported based on the object keypoint similarity (OKS, more on this down below) which plays a similar role as the Intersection over Union (IoU).
 
-## Object Keypoint Similarity
+### Object Keypoint Similarity
 
 The Object Keypoint Similarity evaluation metric (OKS) is used for the Keypoint Evaluation in the COCO benchmark. For each object in this dataset the ground truth keypoints have the form \([x_{1}, y_{1}, v_{1}, ..., x_{k}, y_{k}, v_{k}]\) where \(x\) and \(y\) are the keypoint locations and \(v\) is a visibility flag (0 : not labeled; 1 : labeled but not visible; 2 : labeled and visible). On top of that each ground truth label has a scale \(s\) which is defined as the square root of the object segment area.
 
@@ -87,25 +87,26 @@ The OKS is defined as followed:
 
 Here \(d_{i}\) also describes the euclidean distance between the ground truth keypoint and the detection and \(k_{i}\) is a per-keypoint constant that controls falloff.
 
-## Computational Performance
+### Computational Performance
 
 The computational performance metrics are also very important in the field of HPE. The *Frame Rate* indicates the processing speed of input data, generally expressed by Frames per Second (FPS) or seconds per image (s/image). This is an important metrics e.g. for real-world applications which require real-time-estimation. The *Number of Weights/Parameters* and the *GFLOPs* (Giga Floating-point Operations per second) are two key performance indicators often mentioned. They show the efficiency of the network and the specific use of GPUs or CPUs.
 
-# Popular architectures
+## Popular architectures
 
 In the following I will describe a few popular architectures in Single- and Multi-Human Pose Estimation but there are much more out there.
 
-## Learning Human Pose Estimation Features with Convolutional Networks (2013)
+### Learning Human Pose Estimation Features with Convolutional Networks (2013)
 
-This paper describes the first deep learning approach to tackle the problem of single-person full body human pose estimation with convolutional neural networks. In this approach the authors trained multiple independent binary classification networks, one network per keypoint. The model is applied in a sliding window approach and outputs a response map indicating the confidence of the body part at that location. The figure [fig:conv1] below shows the architecture of the classification models.
+This paper describes the first deep learning approach to tackle the problem of single-person full body human pose estimation with convolutional neural networks. In this approach the authors trained multiple independent binary classification networks, one network per keypoint. The model is applied in a sliding window approach and outputs a response map indicating the confidence of the body part at that location. Figure 5 shows the architecture of the classification models.
 
-![image](../assets/imgs/human_pose_estimation/model_architecture_jain_et_al_2014.png) [fig:conv1]
+![The model architecture of convolutional network]({{ '/assets/imgs/human_pose_estimation/model_architecture_jain_et_al_2014.png' | relative_url}} ) Figure 5. The model architecture of []
 
-The input is of shape 64x64 pixel and locally contrast normalized (LCN). As activation functions ReLU is used. To reduce computational complexity max pooling is applied twice which leeds to some spatial information loss. After the three convoliutional layers follow three fully connected layers. To reduce overfitting, L2 regularization and dropout are applied in the fully connected layers. The output layer is a single logistic unit, representing the probability of a body part being in the patch. Moreover the authors use part priors for the final prediction. For a detailed breakdown of how all this works you should have a look at the paper. The model was evaluated on the FLIC dataset based on the PCK metric described before . Figure [fig:conv2] shows the performance on the wrist, elbow and shoulder joints of 351 FLIC test set images.
+The input is of shape 64x64 pixel and locally contrast normalized (LCN). As activation functions ReLU is used. To reduce computational complexity max pooling is applied twice which leeds to some spatial information loss. After the three convoliutional layers follow three fully connected layers. To reduce overfitting, L2 regularization and dropout are applied in the fully connected layers. The output layer is a single logistic unit, representing the probability of a body part being in the patch. Moreover the authors use part priors for the final prediction. For a detailed breakdown of how all this works you should have a look at the paper. The model was evaluated on the FLIC dataset based on the PCK metric described before . Figure 6 shows the performance on the wrist, elbow and shoulder joints of 351 FLIC test set images.
 
-![image](../assets/imgs/human_pose_estimation/conv_flic.png) [fig:conv2]
+![PCK on wrist, elbow and shoulder joints of FLIC test set]({{ '/assets/imgs/human_pose_estimation/conv_flic.png' | relative_url}} ) Figure 6. PCK on wrist, elbow and shoulder joints of FLIC test set []
 
-## Convolutional Pose Machines (2016)
+
+### Convolutional Pose Machines (2016)
 
 A Convolutional Pose Machine is a single-person Human Pose Estimation model which incorporates convolutional networks into the pose machine framework from Ramakrishna et al. () and inherits its benefits like the implicit learning of long-range spatial dependencies and a modular sequential design. This results in a differentiable architecture that allows for end-to-end training with backpropagation on large amounts of data. Figure [fig:cpm1] shows the overall architecture of the model.
 
@@ -119,7 +120,7 @@ In the first and second stage the model isn’t sure which of the two wrists is 
 
 ![image](../assets/imgs/human_pose_estimation/cpm_mpii.png) [fig:cpm3]
 
-## Deep(er)Cut (2016)
+### Deep(er)Cut (2016)
 
 DeeperCut is an improved version of the DeepCut model which is a multi-person pose estimation approach based on integer-linear programming (ILP) that jointly estimates poses of all people present in an image by minimizing a joint objective. One of the differences between Deep and DeeperCut is that they replace the VGG backbone from the part detector with a modified ResNet-152 for computing part probability scoremaps. This also increases the size of the receptive field from 400 to 1000px which allows a better incorporation of context in the predictions. In addition location refinement is performed by predicting offsets from the locations on the scoremap grid to the ground truth joint locations. During training sigmoid activations and cross entropy loss function are applied.
 
@@ -129,7 +130,7 @@ The two main problems of the DeepCut ILP approach are long computation times for
 
 ![image](../assets/imgs/human_pose_estimation/deepercut_results.png) [fig:deepercut]
 
-## Stacked Hourglass Networks (2016)
+### Stacked Hourglass Networks (2016)
 
 The Stacked Hourglass model is an approach for single-person pose estimation based on repeated bottom-up, top-down processing used in conjunction with intermediate supervision. Its name originates from its modular design and symmetric topology which you can see in Figure [fig:hourglass1]. One important operational difference between this approach and related work is that they don’t use unpooling or deconvolutional layers instead nearest neighbour upsampling and skip connections for top-down processing are incorporated. But why to use this form of network design?
 
@@ -143,7 +144,7 @@ The highest hourglass output resolution is 64x64 due to memory limits. As mentio
 
 ![image](../assets/imgs/human_pose_estimation/stacked_hourglass_MPII.png) [fig:hourglass3]
 
-## PRM (2017)
+### PRM (2017)
 
 The proposed model is based on the Stacked Hourglass architecture incorporating so called Pyramid Residual Modules (PRM) and a new initialization scheme for multi-branch networks . The goal of the introduction of PRMs is to enhance the robustness of DCNNs against scale variations of visual patterns by learning multi-scale features. Many of the popular CNN architectures are multi-branch networks, e.g. Inception, ResNets, Convolutional Pose Machines, Stacked Hourglass Network for which the existing weight initialization schemes aren’t proper. Therefore the authors propose a new method to initialize multi-branch layers that takes the number of branches into consideration. In this article we will focus on the PRMs so for detailed information on the initialization problem please take a look at the original paper.
 
@@ -168,7 +169,7 @@ Important to mention is that the PRM is a general module (not only suitable for 
 
 The input images are 256x256 cropped from a resized image according to the annotated body position and scale. The training data is augmented by scaling, rotation, flipping and adding color and noise. In comparison to the baseline hourglass model the complexity is increased by 13.5% (from 23.7M to 26.9M parameters) and the number of GFLOPs (45.9) for a 256x256 image is also increased by 11.4%.
 
-## Associative Embedding (2017)
+### Associative Embedding (2017)
 
 The problem of bottom-up MPPE can be broken down into detection and grouping: detecting body joints and grouping them into individual people. Associative Embedding is a single-stage method to tackle this task end-to-end by grouping detections through a process called “tagging”. A tag (real number) associates a detection with other detections of a specific group.
 
@@ -191,7 +192,7 @@ The architecture was evaluated on MPII multi-person and COCO (results in Figure 
 
 ![image](../assets/imgs/human_pose_estimation/asso_coco.png) [fig:asso3]
 
-## RMPE (2017)
+### RMPE (2017)
 
 The Regional-Multi-Person Pose Estimation (RMPE) framework imroves the performance of single-person pose estimation (SPPE) based HPE algorithms and therefore addresses two major problems of top-down HPE approaches: the localization error and redundant detections.
 
@@ -220,7 +221,7 @@ The new framework was tested on MPII multi-person and MSCOCO keypoints 2016. The
 
 In Figure [fig:rmpe3] you can see the results on both benchmarks. On MPII it is most notable that the framework increases the mAP on difficult joints like wrists, elbows, ankles and knees significantly. On MSCOCO the framework performs as good as CMU-Pose (bottom-up approach) and much better than other approaches the authors looked at. In their ablation studies they evaluated the effectiveness of all three proposed components.
 
-## Cascaded Pyramid Network (2018)
+### Cascaded Pyramid Network (2018)
 
 The Cascaded Pyramid Network (CPN) is a network structure which targets to relieve the problem of pose estimation from especially hard-to-predict keypoints which include occluded and invisible ones as well as complex backgrounds and crowded scenes. The authors name two reasons for the difficulty. First the “harder” to detect joints cannot be simply recognized based on their appearance features only (e.g. the torso point). Second they are not explicitly addressed during the training process. Therefore this new algorithm includes two stages: GlobalNet and RefineNet (Figure [fig:cpn1]).
 
@@ -234,7 +235,7 @@ As you can see GlobalNet is able to effectively locate the “easier” keypoint
 
 ![image](../assets/imgs/human_pose_estimation/cpn_coco.png) [fig:cpn3]
 
-## OpenPose (2019)
+### OpenPose (2019)
 
 OpenPose is the first open-source realtime system for bottom-up multi-person 2D pose estimation and it’s one of the most popular frameworks out there (OpenCV included it). One of the main problems of top-down approaches in HPE is their early commitment, which means that if the person detector fails (this is often the case when people are in close proximity) there is no recourse to recovery. Another problem is the computational complexity and the runtime which is proportional to the number of people in the image. OpenPose works bottom-up, like DeeperCut, but much much faster. Figure [fig:openpose1] illustrates the whole pipeline of this approach.
 
@@ -297,7 +298,7 @@ The method is evaluated on three MPPE datasets: MPII multi-person, COCO and a se
 
 ![image](../assets/imgs/human_pose_estimation/openpose_runtime.png) [fig:openpose4]
 
-## HRNet (2019)
+### HRNet (2019)
 
 In the authors present a novel model architecture for SPPE, called *High-Resolution Net* (HRNet) which is able to maintain high-resolution representations through the estimation process. Figure [fig:hrnet1] illustrates the architecture of this approach. It consists of parallel high-to-low resolution subnetworks starting from a high-resolution subnetwork. Gradually high-to-low resolution subnetworks are added to form more stages. These multi-resolution subnetworks are connected in parallel. Multi-scale fusions processes are carried out to enable the information exchange across these parallel subnetworks.
 
@@ -319,7 +320,7 @@ Lets look at the formulation of these exchange units a bit closer. The inputs ar
 
 ![image](../assets/imgs/human_pose_estimation/hrnet_coco.png) [fig:hrnet3]
 
-## EfficientPose (2020)
+### EfficientPose (2020)
 
 One of the main problems of state-of-the-art models is their high degree computational complexity which makes them cumbersome to optimize, hard to replicate and impractical to embed into real-world applications. Because of this a novel approach for single-person pose estimation from 2D images called EfficientPose was introduced. The authors compare this to OpenPose because this model is one of the most applied HPE methods in real-world applications and the first open-source real-time HPE system. The problems with OpenPose are its low resolution output (46x46px) and the computational expense (160 billion floating point operations per inference). To overcome these shortcomings the EfficientPose architecture is based on OpenPose including many important modifications to improve the level of precision, decrease computational cost and model size.
 
@@ -335,7 +336,7 @@ Five different variants of EfficientPose models are presented, details in Figure
 
 The presented approach is 4-5.6x smaller than OpenPose regarding the model size (number of parameters) and realizes a 2.2 - 184x reduction in FLOPS. In addition to that the new approach converges faster. The comparison here was between EfficientPoseII and OpenPose because of the similar input size. Potentially the model can also be interesting for multi-person-pose-estimation in a bottom-up fashion based on Part Affinity Fields like OpenPose.
 
-## EvoPose2D (2020)
+### EvoPose2D (2020)
 
 EvoPose2D is the first SPPE network design based on neuroevolution, which is a form of neural architecture search (NAS). The main benefit of networks designed this way is the elimination of human bias leading to more accurate and computationally efficient models. The authors also present a new flexible weight transfer scheme in combination with large-batch (up to 2048 256x192 images) training on Tensor Processing Units (TPUs) that reduces the computational expense of neuroevolution and has no loss in accuracy. For detailed information on neuroevolution take a look at . In this case it is used because of its simplicity compared to alternative approaches based on reinforcement learning, one-shot or gradient-based NAS.
 
@@ -357,7 +358,7 @@ Figure [fig:evopose2] shows the architecture of the second smallest version of t
 
 ![image](../assets/imgs/human_pose_estimation/evopose_results.png) [fig:evopose3]
 
-## More architectures
+### More architectures
 
 As mentioned in the beginning of the section there exist so many different approaches to 2D HPE out there and I only covered a few of them here. If you want to learn more you can take a look at the following approaches which may interest you as well:
 
@@ -376,7 +377,7 @@ As mentioned in the beginning of the section there exist so many different appro
 You can find all the papers in the References. Maybe I will update this post in the future including more up to date models as well.
 
 
-# References
+## References
 
 [1] M. Andriluka, U. Iqbal, E. Ensafutdinov, L. Pishchulin, A. Milan, J. Gall, and S. B. PoseTrack: A benchmark for human pose estimation and tracking. In CVPR, 2018.
 
