@@ -14,3 +14,4 @@ plugins:
 markdown: kramdown
 kramdown:
    math_engine: mathjax
+   html_to_native: true
