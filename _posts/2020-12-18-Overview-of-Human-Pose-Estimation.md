@@ -4,7 +4,7 @@ title: Overview - Human Pose Estimation
 date: 2020-12-18 10:23:16 +0200
 permalink: /:title
 author: Johann Gerberding
-tags: human-pose-estimation, deep-learning, datasets
+tags: human-pose-estimation deep-learning
 ---
 
 ***
