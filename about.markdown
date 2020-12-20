@@ -10,5 +10,5 @@ I am a kind of self-taught developer who considers himself still pretty much at 
 
 I use my blog as a kind of learning diary in which I occasionally write short blog posts on topics related to machine learning or algorithms in which I am interested or currently working on.
 
-In my spare time I enjoy reading a book or doing sports, especially soccer and calisthenics. If you want to know more about me, get in touch with me, have questions or find any errors here, feel free to have a look at my contact information down below or simply send me an E-Mail (johann.gerberding@gmail.com).
+In my spare time I enjoy reading a book or doing sports, especially soccer and calisthenics. If you want to know more about me, get in touch with me, have questions or find any errors here, feel free to have a look at my contact information down below or simply send me an [E-Mail](<johann.gerberding@gmail.com>).
 
